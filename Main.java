@@ -1,5 +1,6 @@
 package ttnt;
 
+import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -14,14 +15,7 @@ public class Main {
 	 * 
 	 * @return
 	 */
-	public static Node input() {
-		int nDisk;
-
-		do {
-			System.out.print("Mời bạn nhập số đĩa(0 < Số đĩa <= 7): ");
-			nDisk = scanner.nextInt();
-		} while (nDisk <= 0 || nDisk > 7);
-
+	public static Node input(byte nDisk) {
 		State state = new State(nDisk);
 		Node roof = new Node(state);
 
@@ -81,18 +75,24 @@ public class Main {
 
 		return res;
 	}
-
+	
 	/**
-	 * Hiển thị ra các bước giải bài toán Tháp Hà Nội
+	 * Lưu các bước thực hiện giải bài toán tháp Hà Nội
 	 * 
-	 * @param states
+	 * 
+	 * @param nDisk
+	 * @return
 	 */
-	public static void displaySteps(ArrayList<State> states) {
+	public static String displaySteps(byte nDisk) {
 
-		int nDisk = states.get(0).state.length;
+		Node roof = input(nDisk);
 
-		System.out.println("Bước 0: Cho " + nDisk + " đĩa vào tháp thứ nhất");
-		System.out.println("\tTrạng thái: " + states.get(0));
+		TreeState.treeState(roof);
+
+		ArrayList<State> states = solution(BFS(roof, State.stateEnd(roof.val)));
+
+		String res = "Bước 0: Cho " + nDisk + " đĩa vào tháp thứ nhất";
+		res += "\n\tTrạng thái: " + states.get(0);
 
 		for (int i = 0; i < states.size() - 1; i++) {
 			int j = 0;
@@ -101,19 +101,26 @@ public class Main {
 				j++;
 			}
 
-			System.out.print("Bước " + (i + 1) + ": ");
-			System.out.println("Chuyển đĩa " + (j + 1) + " từ tháp " + states.get(i).state[j] + " sang tháp "
-					+ states.get(i + 1).state[j]);
-			System.out.println("\tTrạng thái: " + states.get(i + 1));
+			res += "\nBước " + (i + 1) + ": ";
+			res += "Chuyển đĩa " + (j + 1) + " từ tháp " + states.get(i).state[j] + " sang tháp "
+					+ states.get(i + 1).state[j];
+			res += "\n\tTrạng thái: " + states.get(i + 1);
 		}
+		
+		return res;
 	}
 
 	public static void main(String[] args) {
-
-		Node roof = input();
-
-		TreeState.treeState(roof);
-
-		displaySteps(solution(BFS(roof, State.stateEnd(roof.val))));
+		
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Swing frame = new Swing();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }
