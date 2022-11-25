@@ -49,7 +49,7 @@ public class TreeState {
 		Queue<Node> CLOSE = new LinkedList<>();
 
 		OPEN.add(roof);
-
+		
 		while (!OPEN.isEmpty()) {
 			Node temp = OPEN.poll();
 
